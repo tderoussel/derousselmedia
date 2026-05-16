@@ -1,0 +1,70 @@
+---
+import '../styles/main.css';
+import { pictureSources } from '../lib/image-paths';
+
+interface Props {
+  title: string;
+  description: string;
+  ogImage?: string;
+  /** Path to the first hero image (md.jpg). Used to derive the responsive preload tag. */
+  heroImage?: string;
+  heroImageHasVariants?: boolean;
+}
+
+const {
+  title,
+  description,
+  ogImage = '/assets/sports/sports-13-lg.jpg',
+  heroImage = '/assets/sports/sports-13-md.jpg',
+  heroImageHasVariants = true,
+} = Astro.props;
+
+const sources = pictureSources(heroImage, heroImageHasVariants);
+// Use the smallest WebP variant as the preload href so mobile doesn't pull md/lg.
+const preloadHref = sources.srcWebp
+  ? sources.srcWebp.split(',')[0]!.trim().split(' ')[0]!
+  : sources.imgSrc;
+const preloadSrcset = sources.srcWebp ?? '';
+---
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover" />
+<meta name="theme-color" content="#0B0B0B" />
+<title>{title}</title>
+<meta name="description" content={description} />
+<meta name="author" content="Alex DeRoussel" />
+
+<meta property="og:type" content="website" />
+<meta property="og:title" content="DeRoussel Media" />
+<meta property="og:description" content="Visual storytelling — sports, landscape, journalism, and commercial work by Alex DeRoussel." />
+<meta property="og:image" content={ogImage} />
+<meta name="twitter:card" content="summary_large_image" />
+<meta name="twitter:title" content="DeRoussel Media" />
+<meta name="twitter:description" content="Visual storytelling by Alex DeRoussel — sports, landscape, journalism, commercial." />
+<meta name="twitter:image" content={ogImage} />
+
+<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,30..100,0..1;1,9..144,300..900,30..100,0..1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,30..100,0..1;1,9..144,300..900,30..100,0..1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" media="print" onload="this.media='all'" />
+<noscript><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,30..100,0..1;1,9..144,300..900,30..100,0..1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" /></noscript>
+
+<link
+  rel="preload"
+  as="image"
+  href={preloadHref}
+  type="image/webp"
+  fetchpriority="high"
+  imagesrcset={preloadSrcset}
+  imagesizes="100vw"
+/>
+</head>
+<body data-theme="dark">
+  <a class="skip-link" href="#sports">Skip to portfolio</a>
+  <slot />
+  <script src="/main.js" defer is:inline></script>
+</body>
+</html>

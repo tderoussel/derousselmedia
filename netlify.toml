@@ -1,0 +1,48 @@
+# Netlify build & deploy configuration for DeRoussel Media.
+# Docs: https://docs.netlify.com/configure-builds/file-based-configuration/
+
+[build]
+  # Build the Astro project under cms-site/.
+  base = "cms-site"
+  command = "npm install && npm run build"
+  publish = "dist"
+
+[build.environment]
+  # Astro 6 requires Node 22+.
+  NODE_VERSION = "22"
+  NPM_FLAGS = "--no-fund --no-audit --prefer-offline --loglevel=error"
+
+# Long-cache hashed Astro asset URLs.
+[[headers]]
+  for = "/_astro/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Long-cache the pre-built /assets/ images (existing migrated content).
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    Cache-Control = "public, max-age=31536000, immutable"
+
+# Shorter cache on /uploads/ — new CMS uploads use the same filename if Alex
+# re-uploads, so we want a 5-minute TTL to pick up replacements quickly.
+[[headers]]
+  for = "/uploads/*"
+  [headers.values]
+    Cache-Control = "public, max-age=300, must-revalidate"
+
+# Always revalidate the admin app so config.yml changes pick up immediately.
+[[headers]]
+  for = "/admin/*"
+  [headers.values]
+    Cache-Control = "no-cache, must-revalidate"
+
+# Allow the Decap config (yaml) to be served with the right content type.
+[[headers]]
+  for = "/admin/config.yml"
+  [headers.values]
+    Content-Type = "text/yaml; charset=utf-8"
+
+# Netlify Identity + Git Gateway are configured per-site in the dashboard
+# (Site settings → Identity, Git Gateway). The runbook in DEVELOPER_SETUP.md
+# walks through the exact click-path.

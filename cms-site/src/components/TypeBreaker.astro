@@ -1,0 +1,9 @@
+---
+interface Props {
+  label: string;
+}
+const { label } = Astro.props;
+---
+<aside class="type-breaker" aria-hidden="true">
+  <span class="type-breaker-fill">{label}</span>
+</aside>

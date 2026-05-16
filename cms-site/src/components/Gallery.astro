@@ -1,0 +1,73 @@
+---
+import { layoutMosaic, type PhotoForMosaic } from '../lib/mosaic';
+import { pictureSources } from '../lib/image-paths';
+
+export interface GalleryPhoto {
+  id: string;
+  image: string;
+  alt: string;
+  caption?: string;
+  span: 'auto' | 'small' | 'medium' | 'large' | 'wide' | 'tall';
+  width?: number;
+  height?: number;
+  hasResponsiveVariants: boolean;
+}
+
+interface Props {
+  photos: GalleryPhoto[];
+  /** Lightbox group id — also used to bind keyboard nav per gallery */
+  groupId: string;
+  /** id of the section h2 the gallery is for, used for aria labelling */
+  ariaLabelledby: string;
+  /** Number of photos to render eagerly (above the fold). Rest are loading=lazy. */
+  eagerCount?: number;
+  /** Optional extra class on the .grid wrapper, e.g. "grid-landscape" */
+  gridVariant?: 'sports' | 'landscape';
+}
+
+const {
+  photos,
+  groupId,
+  eagerCount = 2,
+  gridVariant = 'sports',
+} = Astro.props;
+
+// Build the mosaic.
+const mosaicInput: PhotoForMosaic[] = photos.map((p) => {
+  const aspect = p.width && p.height ? p.width / p.height : 0.75; // assume portrait if unknown
+  return { aspect, span: p.span };
+});
+const layout = layoutMosaic(mosaicInput);
+---
+<div class={`grid grid-${gridVariant}`} data-lightbox-group={groupId}>
+  {photos.map((p, i) => {
+    const cell = layout[i]!;
+    const sources = pictureSources(p.image, p.hasResponsiveVariants);
+    const isEager = i < eagerCount;
+    return (
+      <figure class={cell.classes} data-index={i}>
+        <button type="button" class="cell-trigger" aria-label={`Open photo: ${p.alt}`}>
+          <picture>
+            {sources.srcWebp && (
+              <source type="image/webp" srcset={sources.srcWebp} sizes={cell.sizes} />
+            )}
+            {sources.srcJpg && (
+              <source type="image/jpeg" srcset={sources.srcJpg} sizes={cell.sizes} />
+            )}
+            <img
+              src={sources.imgSrc}
+              alt={p.alt}
+              loading={isEager ? 'eager' : 'lazy'}
+              decoding="async"
+              width={p.width}
+              height={p.height}
+            />
+          </picture>
+          {p.caption && (
+            <figcaption class="cell-caption visually-hidden">{p.caption}</figcaption>
+          )}
+        </button>
+      </figure>
+    );
+  })}
+</div>

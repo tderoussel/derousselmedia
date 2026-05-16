@@ -1,0 +1,30 @@
+---
+interface Props {
+  email: string;
+  phone: string;
+  phoneDisplay: string;
+  instagramUrl?: string;
+}
+
+const { email, phone, phoneDisplay, instagramUrl } = Astro.props;
+const phoneHref = `tel:${phone.replace(/[^+\d]/g, '')}`;
+const hasInstagram = instagramUrl && instagramUrl.trim() !== '' && instagramUrl !== '#';
+---
+<footer class="site-footer">
+  <div class="footer-row">
+    <p class="footer-brand">DeRoussel/Media</p>
+    <p class="footer-copy">© <span id="footer-year">2026</span> Alex DeRoussel. All work shown is owned by the artist.</p>
+  </div>
+  <div class="footer-row footer-row-thin">
+    <ul class="footer-meta">
+      <li><a href={`mailto:${email}`}>{email}</a></li>
+      <li><a href={phoneHref} set:html={phoneDisplay}></a></li>
+      {hasInstagram ? (
+        <li><a href={instagramUrl} target="_blank" rel="noopener">Instagram</a></li>
+      ) : (
+        <li><a href="#" aria-disabled="true" tabindex="-1" class="muted">Instagram</a></li>
+      )}
+    </ul>
+    <p class="footer-mark"><a href="#top">Top &uarr;</a></p>
+  </div>
+</footer>

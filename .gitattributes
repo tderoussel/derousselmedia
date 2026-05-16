@@ -1,0 +1,21 @@
+# Normalize line endings across platforms.
+* text=auto eol=lf
+
+# Treat known-binary as such to avoid corruption.
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.webp binary
+*.gif binary
+*.ico binary
+*.mp4 binary
+*.mov binary
+*.webm binary
+*.woff binary
+*.woff2 binary
+*.ttf binary
+*.eot binary
+*.otf binary
+*.pdf binary
+*.zip binary
+*.gz binary

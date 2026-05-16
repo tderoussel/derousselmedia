@@ -1,0 +1,229 @@
+# Decap CMS configuration for DeRoussel Media.
+# Docs: https://decapcms.org/docs/configuration-options/
+#
+# Backend: git-gateway (Netlify Identity is required — enable in Netlify dashboard).
+# Branch: main. Edits commit directly to main (no editorial workflow).
+
+backend:
+  name: git-gateway
+  branch: main
+  commit_messages:
+    create: 'cms: create {{collection}} "{{slug}}"'
+    update: 'cms: update {{collection}} "{{slug}}"'
+    delete: 'cms: delete {{collection}} "{{slug}}"'
+    uploadMedia: 'cms: upload "{{path}}"'
+    deleteMedia: 'cms: delete "{{path}}"'
+
+# Local backend support for `npx decap-server` development.
+# (Set local_backend: false here in production; the dev script enables it.)
+local_backend: true
+
+# Media is committed to the repo at cms-site/public/uploads/ (Astro's public dir)
+# and served at /uploads/ on the live site. Both paths are relative to the repo root.
+media_folder: cms-site/public/uploads
+public_folder: /uploads
+
+# Per-photo size limit. Decap rejects larger uploads in the browser.
+# Alex's typical phone/camera output is well under this.
+media_library:
+  config:
+    max_file_size: 20971520 # 20 MB
+
+site_url: https://derousselmedia.com
+display_url: https://derousselmedia.com
+logo_url: /favicon.svg
+
+# Show a friendly slug summary in lists.
+slug:
+  encoding: ascii
+  clean_accents: true
+
+# ────────── COLLECTIONS ──────────
+collections:
+  # 1. SPORTS GALLERY
+  - name: sports
+    label: Sports photos
+    label_singular: Sports photo
+    folder: cms-site/src/content/sports
+    create: true
+    delete: true
+    extension: md
+    format: yaml-frontmatter
+    slug: '{{slug}}'
+    summary: '{{order | default(100)}} · {{alt | truncate(60)}}'
+    sortable_fields: [order, alt]
+    view_filters:
+      - label: All
+        field: span
+        pattern: ''
+      - label: Full-bleed only
+        field: span
+        pattern: wide
+    view_groups:
+      - label: By emphasis
+        field: span
+    fields:
+      - { name: image, label: 'Photo', widget: image, required: true, hint: 'Drag in or upload. JPEG/PNG/WebP, up to 20 MB.' }
+      - { name: alt, label: 'Description (alt text)', widget: string, required: true, hint: 'Describe what is in the photo. Used by screen readers and search engines.' }
+      - { name: caption, label: 'Caption (optional)', widget: string, required: false, hint: 'Shown in the lightbox under the photo.' }
+      - name: span
+        label: 'Emphasis'
+        widget: select
+        default: auto
+        options:
+          - { label: 'Auto (let the layout decide)', value: auto }
+          - { label: 'Full-bleed letterbox (use sparingly!)', value: wide }
+          - { label: 'Tall column', value: tall }
+          - { label: 'Small', value: small }
+          - { label: 'Medium', value: medium }
+          - { label: 'Large', value: large }
+        required: false
+        hint: 'Leave on Auto unless you really want to override the layout.'
+      - { name: order, label: 'Order', widget: number, default: 100, value_type: int, hint: 'Lower numbers appear first. Increment by 10s to leave room for inserts.' }
+      - { name: hasResponsiveVariants, label: 'Has pre-built variants', widget: hidden, default: false }
+      - { name: width, label: 'Original width (optional)', widget: number, required: false, value_type: int }
+      - { name: height, label: 'Original height (optional)', widget: number, required: false, value_type: int }
+
+  # 2. LANDSCAPE GALLERY
+  - name: landscape
+    label: Landscape photos
+    label_singular: Landscape photo
+    folder: cms-site/src/content/landscape
+    create: true
+    delete: true
+    extension: md
+    format: yaml-frontmatter
+    slug: '{{slug}}'
+    summary: '{{order | default(100)}} · {{alt | truncate(60)}}'
+    sortable_fields: [order, alt]
+    fields:
+      - { name: image, label: 'Photo', widget: image, required: true }
+      - { name: alt, label: 'Description (alt text)', widget: string, required: true }
+      - { name: caption, label: 'Caption (optional)', widget: string, required: false }
+      - name: span
+        label: 'Emphasis'
+        widget: select
+        default: auto
+        options:
+          - { label: 'Auto', value: auto }
+          - { label: 'Full-bleed letterbox', value: wide }
+          - { label: 'Tall column', value: tall }
+          - { label: 'Small', value: small }
+          - { label: 'Medium', value: medium }
+          - { label: 'Large', value: large }
+        required: false
+      - { name: order, label: 'Order', widget: number, default: 100, value_type: int, hint: 'Lower numbers appear first.' }
+      - { name: hasResponsiveVariants, label: 'Has pre-built variants', widget: hidden, default: false }
+      - { name: width, label: 'Original width (optional)', widget: number, required: false, value_type: int }
+      - { name: height, label: 'Original height (optional)', widget: number, required: false, value_type: int }
+
+  # 3. MISCELLANEOUS GALLERY
+  - name: misc
+    label: Miscellaneous photos
+    label_singular: Miscellaneous photo
+    folder: cms-site/src/content/misc
+    create: true
+    delete: true
+    extension: md
+    format: yaml-frontmatter
+    slug: '{{slug}}'
+    summary: '{{order | default(100)}} · {{alt | truncate(60)}}'
+    sortable_fields: [order, alt]
+    fields:
+      - { name: image, label: 'Photo', widget: image, required: true }
+      - { name: alt, label: 'Description (alt text)', widget: string, required: true }
+      - { name: caption, label: 'Caption (optional)', widget: string, required: false }
+      - name: span
+        label: 'Emphasis'
+        widget: select
+        default: auto
+        options:
+          - { label: 'Auto', value: auto }
+          - { label: 'Full-bleed letterbox', value: wide }
+          - { label: 'Tall column', value: tall }
+          - { label: 'Small', value: small }
+          - { label: 'Medium', value: medium }
+          - { label: 'Large', value: large }
+        required: false
+      - { name: order, label: 'Order', widget: number, default: 100, value_type: int, hint: 'Lower numbers appear first.' }
+      - { name: hasResponsiveVariants, label: 'Has pre-built variants', widget: hidden, default: false }
+      - { name: width, label: 'Original width (optional)', widget: number, required: false, value_type: int }
+      - { name: height, label: 'Original height (optional)', widget: number, required: false, value_type: int }
+
+  # 4. FILMS / VIDEOS
+  - name: films
+    label: Films & reels
+    label_singular: Film
+    folder: cms-site/src/content/films
+    create: true
+    delete: true
+    extension: md
+    format: yaml-frontmatter
+    slug: '{{slug}}'
+    summary: '{{order | default(100)}} · {{title}}'
+    sortable_fields: [order, title]
+    fields:
+      - { name: title, label: 'Title', widget: string, required: true, hint: 'For internal reference, e.g. "Broadcast Journalism Reel".' }
+      - name: section
+        label: 'Section anchor'
+        widget: select
+        required: true
+        options:
+          - { label: 'Journalism (top film slot)', value: journalism }
+          - { label: 'Commercial (bottom film slot)', value: commercial }
+        hint: 'Where this film appears on the page. Each anchor accepts one film.'
+      - { name: eyebrow, label: 'Small label above heading', widget: string, default: '005 / Broadcast Journalism' }
+      - { name: headingPrefix, label: 'Heading: roman text before italic word', widget: string, required: false }
+      - { name: headingItalic, label: 'Heading: italicized word', widget: string, required: false }
+      - { name: headingSuffix, label: 'Heading: roman text after italic word', widget: string, required: false }
+      - { name: description, label: 'Description', widget: text, required: true, hint: 'A short paragraph shown above the video.' }
+      - name: videoUrl
+        label: 'Video URL or upload'
+        widget: file
+        media_library:
+          config:
+            max_file_size: 52428800 # 50 MB
+        required: true
+        hint: 'Upload a local MP4 (max 50 MB) OR paste a YouTube/Vimeo URL.'
+      - { name: videoUrlHd, label: 'Optional HD rendition (1080p)', widget: file, required: false, hint: 'For local videos: a higher-quality fallback for desktop.' }
+      - { name: poster, label: 'Poster image (required for local video)', widget: image, required: false }
+      - { name: order, label: 'Order', widget: number, default: 100, value_type: int }
+
+  # 5. ABOUT (single file)
+  - name: pages
+    label: Pages (about, settings)
+    files:
+      - name: about
+        label: 'About page'
+        file: cms-site/src/content/pages/about.md
+        format: yaml-frontmatter
+        fields:
+          - { name: aboutLede, label: 'Bio (one paragraph)', widget: text, required: true, hint: 'Your About paragraph. Confident, third-person.' }
+          - { name: disciplines, label: 'Disciplines (right column)', widget: string, required: false, hint: 'e.g. "Photography · Video · Broadcast"' }
+          - { name: basedIn, label: 'Based in', widget: string, required: false, hint: 'e.g. "Washington, D.C. area"' }
+          - { name: available, label: 'Available for', widget: string, required: false, hint: 'e.g. "Editorial · Commercial · NIL"' }
+      - name: settings
+        label: 'Site settings'
+        file: cms-site/src/content/pages/settings.md
+        format: yaml-frontmatter
+        fields:
+          - { name: siteTitle, label: 'Site title (browser tab)', widget: string, required: false }
+          - { name: siteDescription, label: 'Site description (SEO)', widget: text, required: false }
+          - { name: tagline, label: 'Hero tagline (one line)', widget: string, required: false, hint: 'HTML allowed (e.g. <span class="nowrap">). Will appear below the hero name.' }
+          - { name: heroEyebrowLeft, label: 'Hero eyebrow — left', widget: string, required: false, default: 'est. 2024' }
+          - { name: heroEyebrowRight, label: 'Hero eyebrow — right', widget: string, required: false, default: 'visual storytelling' }
+          - { name: heroNameLine1, label: 'Hero — first line (roman)', widget: string, required: false, default: 'DeRoussel' }
+          - { name: heroNameLine2, label: 'Hero — second line (italic)', widget: string, required: false, default: 'Media' }
+          - name: heroRotation
+            label: 'Hero rotation images'
+            widget: list
+            required: false
+            min: 1
+            max: 6
+            hint: 'Background photos that fade through behind the hero. The first one loads instantly.'
+            field: { name: image, label: 'Photo path', widget: string, required: true, hint: 'e.g. /assets/sports/sports-13-md.jpg or /uploads/photo.jpg' }
+          - { name: contactEmail, label: 'Contact email', widget: string, required: false, default: 'derousselmedia@gmail.com' }
+          - { name: contactPhone, label: 'Contact phone (e.g. +15139688918)', widget: string, required: false, default: '+15139688918' }
+          - { name: contactPhoneDisplay, label: 'Contact phone (display)', widget: string, required: false, default: '(513) 968–8918' }
+          - { name: instagramUrl, label: 'Instagram URL (leave blank to hide)', widget: string, required: false, default: '' }
+          - { name: ogImage, label: 'Open Graph share image', widget: string, required: false, default: '/assets/sports/sports-13-lg.jpg' }

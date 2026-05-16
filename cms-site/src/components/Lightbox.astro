@@ -1,0 +1,19 @@
+---
+// The lightbox modal markup. Behavior is wired up by /main.js.
+---
+<div class="lightbox" id="lightbox" role="dialog" aria-modal="true" aria-labelledby="lightbox-caption" hidden>
+  <button class="lightbox-close" type="button" aria-label="Close (Esc)">
+    <svg viewBox="0 0 24 24" width="20" height="20" aria-hidden="true"><path d="M5 5l14 14M19 5L5 19" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+  </button>
+  <button class="lightbox-prev" type="button" aria-label="Previous (Left arrow)">
+    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M15 4l-8 8 8 8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+  </button>
+  <button class="lightbox-next" type="button" aria-label="Next (Right arrow)">
+    <svg viewBox="0 0 24 24" width="24" height="24" aria-hidden="true"><path d="M9 4l8 8-8 8" fill="none" stroke="currentColor" stroke-width="1.5"/></svg>
+  </button>
+  <figure class="lightbox-figure">
+    <img class="lightbox-image" alt="" />
+    <figcaption class="lightbox-caption" id="lightbox-caption"></figcaption>
+  </figure>
+  <p class="lightbox-counter" aria-live="polite"></p>
+</div>

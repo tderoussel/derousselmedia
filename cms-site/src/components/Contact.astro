@@ -1,0 +1,35 @@
+---
+interface Props {
+  email: string;
+  phone: string;
+  phoneDisplay: string;
+  instagramUrl?: string;
+}
+
+const { email, phone, phoneDisplay, instagramUrl } = Astro.props;
+const phoneHref = `tel:${phone.replace(/[^+\d]/g, '')}`;
+---
+<section class="contact" id="contact" aria-labelledby="contact-heading">
+  <p class="section-eyebrow">008 / Contact</p>
+  <h2 class="section-heading contact-heading" id="contact-heading">
+    <em>Let&rsquo;s</em>&nbsp;make&nbsp;<br>something.
+  </h2>
+  <ul class="contact-list">
+    <li>
+      <span class="contact-label">Email</span>
+      <a class="contact-link" href={`mailto:${email}`}>{email}</a>
+    </li>
+    <li>
+      <span class="contact-label">Phone</span>
+      <a class="contact-link" href={phoneHref} set:html={phoneDisplay}></a>
+    </li>
+    <li>
+      <span class="contact-label">Social</span>
+      {instagramUrl && instagramUrl.trim() !== '' && instagramUrl !== '#' ? (
+        <a class="contact-link" href={instagramUrl} target="_blank" rel="noopener">Instagram &nbsp;&rarr;</a>
+      ) : (
+        <a class="contact-link contact-link-muted" href="#" aria-disabled="true" tabindex="-1">Instagram &nbsp;&rarr;</a>
+      )}
+    </li>
+  </ul>
+</section>

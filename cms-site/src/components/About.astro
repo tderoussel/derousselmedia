@@ -1,0 +1,22 @@
+---
+interface Props {
+  lede: string;
+  disciplines?: string;
+  basedIn?: string;
+  available?: string;
+}
+
+const { lede, disciplines, basedIn, available } = Astro.props;
+---
+<section class="about" id="about" aria-labelledby="about-heading">
+  <p class="section-eyebrow">007 / About</p>
+  <h2 class="section-heading" id="about-heading">About</h2>
+  <div class="about-grid">
+    <p class="about-lede" set:html={lede}></p>
+    <dl class="about-meta">
+      {disciplines && <div><dt>Disciplines</dt><dd>{disciplines}</dd></div>}
+      {basedIn && <div><dt>Based in</dt><dd>{basedIn}</dd></div>}
+      {available && <div><dt>Available</dt><dd>{available}</dd></div>}
+    </dl>
+  </div>
+</section>

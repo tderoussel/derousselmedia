@@ -1,0 +1,23 @@
+---
+interface Props {
+  eyebrow: string;
+  /** Raw HTML for the heading (e.g., "<em>Sports</em>&nbsp;Photography") */
+  headingHtml: string;
+  lede?: string;
+  id: string;
+  headerExtraClass?: string;
+}
+
+const {
+  eyebrow,
+  headingHtml,
+  lede,
+  id,
+  headerExtraClass = '',
+} = Astro.props;
+---
+<header class={`section-header ${headerExtraClass}`.trim()}>
+  <p class="section-eyebrow">{eyebrow}</p>
+  <h2 class="section-heading" id={id} set:html={headingHtml}></h2>
+  {lede && <p class="section-lede">{lede}</p>}
+</header>

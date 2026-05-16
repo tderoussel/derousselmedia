@@ -1,0 +1,67 @@
+---
+// Hero with rotating background slides + display name.
+// Slides 1+ are lazy-hydrated by /main.js after 10s (Lighthouse-friendly).
+
+import { pictureSources } from '../lib/image-paths';
+
+interface Props {
+  eyebrowLeft: string;
+  eyebrowRight: string;
+  nameLine1: string;
+  nameLine2: string; // italicized
+  tagline: string;
+  // Each slide is an image path. The first slide is rendered eagerly; the rest are
+  // hydrated via data-src-* attributes by /main.js after the page settles.
+  // hasResponsiveVariants determines whether we build a 3-size srcset.
+  rotation: Array<{ image: string; hasResponsiveVariants: boolean }>;
+}
+
+const { eyebrowLeft, eyebrowRight, nameLine1, nameLine2, tagline, rotation } = Astro.props;
+const slides = rotation.length > 0 ? rotation : [{ image: '/assets/sports/sports-13-md.jpg', hasResponsiveVariants: true }];
+const first = slides[0]!;
+const firstSources = pictureSources(first.image, first.hasResponsiveVariants);
+---
+<section class="hero" aria-labelledby="hero-heading">
+  <div class="hero-stage" aria-hidden="true">
+    <picture class="hero-image is-active" data-slide="0">
+      {firstSources.srcWebp && (
+        <source type="image/webp" srcset={firstSources.srcWebp} sizes="100vw" />
+      )}
+      <img src={firstSources.imgSrc} alt="" loading="eager" fetchpriority="high" decoding="async" />
+    </picture>
+    {slides.slice(1).map((slide, i) => {
+      const s = pictureSources(slide.image, slide.hasResponsiveVariants);
+      // Build a JPG src for lazy hydration (the script will turn this into a <source> + <img>).
+      const jpgFallback = s.srcJpg
+        ? s.srcJpg.split(',').pop()!.trim().split(' ')[0]!
+        : slide.image;
+      return (
+        <picture
+          class="hero-image"
+          data-slide={i + 1}
+          data-src-webp={s.srcWebp || ''}
+          data-src-jpg={jpgFallback}
+        ></picture>
+      );
+    })}
+    <div class="hero-veil"></div>
+  </div>
+
+  <div class="hero-content">
+    <p class="hero-eyebrow">
+      <span>{eyebrowLeft}</span>
+      <span class="hero-eyebrow-dot" aria-hidden="true"></span>
+      <span>{eyebrowRight}</span>
+    </p>
+    <h1 class="hero-heading" id="hero-heading">
+      <span class="hero-line">{nameLine1}</span>
+      <span class="hero-line hero-line-alt"><em>{nameLine2}</em></span>
+    </h1>
+    <p class="hero-tagline" set:html={tagline}></p>
+  </div>
+
+  <a href="#work" class="scroll-cue" aria-label="Scroll to work">
+    <span class="scroll-cue-label">scroll</span>
+    <span class="scroll-cue-line" aria-hidden="true"></span>
+  </a>
+</section>

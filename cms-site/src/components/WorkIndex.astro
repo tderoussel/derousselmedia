@@ -1,0 +1,27 @@
+---
+interface Props {
+  sportsCount: number;
+  landscapeCount: number;
+  miscCount: number;
+  hasJournalism: boolean;
+  hasCommercial: boolean;
+}
+
+const { sportsCount, landscapeCount, miscCount, hasJournalism, hasCommercial } = Astro.props;
+const pad = (n: number) => String(n).padStart(2, '0');
+---
+<section class="work-index" id="work" aria-labelledby="work-heading">
+  <p class="section-eyebrow">001 / Index</p>
+  <h2 class="visually-hidden" id="work-heading">Work</h2>
+  <ol class="work-list" role="list">
+    <li><a href="#sports" class="work-link"><span class="work-num">01</span><span class="work-name">Sports</span><span class="work-count">{pad(sportsCount)}</span></a></li>
+    <li><a href="#landscape" class="work-link"><span class="work-num">02</span><span class="work-name">Landscape</span><span class="work-count">{pad(landscapeCount)}</span></a></li>
+    <li><a href="#misc" class="work-link"><span class="work-num">03</span><span class="work-name">Miscellaneous</span><span class="work-count">{pad(miscCount)}</span></a></li>
+    {hasJournalism && (
+      <li><a href="#journalism" class="work-link"><span class="work-num">04</span><span class="work-name">Journalism</span><span class="work-count">Reel</span></a></li>
+    )}
+    {hasCommercial && (
+      <li><a href="#commercial" class="work-link"><span class="work-num">05</span><span class="work-name">Commercial</span><span class="work-count">Spot</span></a></li>
+    )}
+  </ol>
+</section>

@@ -1,0 +1,230 @@
+---
+import { getCollection, getEntry, render } from 'astro:content';
+
+import BaseLayout from '../layouts/BaseLayout.astro';
+import SiteHeader from '../components/SiteHeader.astro';
+import Hero from '../components/Hero.astro';
+import Marquee from '../components/Marquee.astro';
+import WorkIndex from '../components/WorkIndex.astro';
+import SectionHeader from '../components/SectionHeader.astro';
+import Gallery from '../components/Gallery.astro';
+import TypeBreaker from '../components/TypeBreaker.astro';
+import VideoSection from '../components/VideoSection.astro';
+import About from '../components/About.astro';
+import Contact from '../components/Contact.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import Lightbox from '../components/Lightbox.astro';
+
+// Pull collections.
+const sportsRaw = await getCollection('sports');
+const landscapeRaw = await getCollection('landscape');
+const miscRaw = await getCollection('misc');
+const filmsRaw = await getCollection('films');
+
+// Sort by `order` then by `id` for stable secondary order.
+const byOrder = <T extends { id: string; data: { order: number } }>(arr: T[]) =>
+  [...arr].sort((a, b) => (a.data.order - b.data.order) || a.id.localeCompare(b.id));
+
+const sports = byOrder(sportsRaw);
+const landscape = byOrder(landscapeRaw);
+const misc = byOrder(miscRaw);
+const films = byOrder(filmsRaw);
+
+// Map entries → gallery photo props.
+const toGalleryPhoto = (e: typeof sports[number]) => ({
+  id: e.id,
+  image: e.data.image,
+  alt: e.data.alt,
+  caption: e.data.caption,
+  span: e.data.span,
+  width: e.data.width,
+  height: e.data.height,
+  hasResponsiveVariants: e.data.hasResponsiveVariants,
+});
+const sportsPhotos = sports.map(toGalleryPhoto);
+const landscapePhotos = landscape.map(toGalleryPhoto);
+const miscPhotos = misc.map(toGalleryPhoto);
+
+// Pages
+const settingsEntry = await getEntry('pages', 'settings');
+const aboutEntry = await getEntry('pages', 'about');
+
+const settings = settingsEntry?.data ?? {};
+const about = aboutEntry?.data ?? {};
+const aboutBody = aboutEntry ? (await render(aboutEntry)).Content : null;
+
+const siteTitle = settings.siteTitle ?? 'DeRoussel Media — Visual storytelling by Alex DeRoussel';
+const siteDescription = settings.siteDescription ?? 'DeRoussel Media is the portfolio of Alex DeRoussel: sports photography, landscape, broadcast journalism, and commercial work.';
+const heroEyebrowLeft = settings.heroEyebrowLeft ?? 'est. 2024';
+const heroEyebrowRight = settings.heroEyebrowRight ?? 'visual storytelling';
+const heroNameLine1 = settings.heroNameLine1 ?? 'DeRoussel';
+const heroNameLine2 = settings.heroNameLine2 ?? 'Media';
+const tagline = settings.tagline ?? 'Sports, landscape, broadcast journalism, and commercial work by <span class="nowrap">Alex DeRoussel.</span>';
+const ogImage = settings.ogImage ?? '/assets/sports/sports-13-lg.jpg';
+
+const email = settings.contactEmail ?? 'derousselmedia@gmail.com';
+const phone = settings.contactPhone ?? '+15139688918';
+const phoneDisplay = settings.contactPhoneDisplay ?? '(513) 968&ndash;8918';
+const instagramUrl = settings.instagramUrl ?? '';
+
+// Hero rotation: pick from settings or fall back to the curated default 4.
+const heroRotation = (settings.heroRotation && settings.heroRotation.length > 0)
+  ? settings.heroRotation.map((image: string) => {
+      // Determine if it has variants by checking whether the path matches /assets/.../*-md.jpg
+      const hasVariants = /\/assets\/.+-md\.(jpg|jpeg|webp|png)$/i.test(image);
+      return { image, hasResponsiveVariants: hasVariants };
+    })
+  : [
+      { image: '/assets/sports/sports-13-md.jpg', hasResponsiveVariants: true },
+      { image: '/assets/sports/sports-09-md.jpg', hasResponsiveVariants: true },
+      { image: '/assets/landscape/landscape-05-md.jpg', hasResponsiveVariants: true },
+      { image: '/assets/sports/sports-04-md.jpg', hasResponsiveVariants: true },
+    ];
+
+const journalismFilm = films.find((f) => f.data.section === 'journalism');
+const commercialFilm = films.find((f) => f.data.section === 'commercial');
+
+const aboutLede = about.aboutLede ?? 'Alex DeRoussel is a videographer, photographer, and broadcast journalist working in sports, landscape, and commercial film. He shoots college athletics, on-the-ground reporting, and concept-led commercial spots, with an eye for available light and the quiet moments around the action.';
+---
+<BaseLayout
+  title={siteTitle}
+  description={siteDescription}
+  ogImage={ogImage}
+  heroImage={heroRotation[0]?.image}
+  heroImageHasVariants={heroRotation[0]?.hasResponsiveVariants}
+>
+  <SiteHeader />
+
+  <main>
+    <Hero
+      eyebrowLeft={heroEyebrowLeft}
+      eyebrowRight={heroEyebrowRight}
+      nameLine1={heroNameLine1}
+      nameLine2={heroNameLine2}
+      tagline={tagline}
+      rotation={heroRotation}
+    />
+
+    <Marquee />
+
+    <WorkIndex
+      sportsCount={sports.length}
+      landscapeCount={landscape.length}
+      miscCount={misc.length}
+      hasJournalism={!!journalismFilm}
+      hasCommercial={!!commercialFilm}
+    />
+
+    {sports.length > 0 && (
+      <section class="gallery" id="sports" aria-labelledby="sports-heading">
+        <SectionHeader
+          eyebrow="002 / Sports Photography"
+          headingHtml="<em>Sports</em>&nbsp;Photography"
+          lede="Collegiate athletics shot on field and indoors — George Mason track &amp; field, basketball, soccer. Available light, decisive moments."
+          id="sports-heading"
+        />
+        <Gallery
+          photos={sportsPhotos}
+          groupId="sports"
+          ariaLabelledby="sports-heading"
+          eagerCount={2}
+          gridVariant="sports"
+        />
+      </section>
+    )}
+
+    {landscape.length > 0 && <TypeBreaker label="Landscape" />}
+
+    {landscape.length > 0 && (
+      <section class="gallery gallery-landscape" id="landscape" aria-labelledby="landscape-heading">
+        <SectionHeader
+          eyebrow="003 / Landscape"
+          headingHtml="<em>Landscape</em>"
+          lede="Washington, D.C. at dusk — monuments, marble, blossoms. Quiet pacing, long looks."
+          id="landscape-heading"
+          headerExtraClass="section-header-landscape"
+        />
+        <Gallery
+          photos={landscapePhotos}
+          groupId="landscape"
+          ariaLabelledby="landscape-heading"
+          eagerCount={0}
+          gridVariant="landscape"
+        />
+      </section>
+    )}
+
+    {misc.length > 0 && <TypeBreaker label="Miscellaneous" />}
+
+    {misc.length > 0 && (
+      <section class="gallery gallery-misc" id="misc" aria-labelledby="misc-heading">
+        <SectionHeader
+          eyebrow="004 / Miscellaneous"
+          headingHtml="<em>Miscellaneous</em>"
+          lede="Frames that don&rsquo;t sit in a category — night light, golden hour, the quiet edges of an event."
+          id="misc-heading"
+        />
+        <Gallery
+          photos={miscPhotos}
+          groupId="misc"
+          ariaLabelledby="misc-heading"
+          eagerCount={0}
+          gridVariant="landscape"
+        />
+      </section>
+    )}
+
+    {(journalismFilm || commercialFilm) && <TypeBreaker label="Film" />}
+
+    {journalismFilm && (
+      <VideoSection
+        id="journalism"
+        eyebrow={journalismFilm.data.eyebrow}
+        headingHtml={`${journalismFilm.data.headingPrefix ? `<em>${journalismFilm.data.headingPrefix}</em>&nbsp;` : ''}${journalismFilm.data.headingItalic ?? journalismFilm.data.title}${journalismFilm.data.headingSuffix ? `&nbsp;${journalismFilm.data.headingSuffix}` : ''}`}
+        description={journalismFilm.data.description}
+        videoUrl={journalismFilm.data.videoUrl}
+        videoUrlHd={journalismFilm.data.videoUrlHd}
+        poster={journalismFilm.data.poster}
+        ariaLabel={`${journalismFilm.data.title} by Alex DeRoussel`}
+      />
+    )}
+
+    {commercialFilm && (
+      <VideoSection
+        id="commercial"
+        eyebrow={commercialFilm.data.eyebrow}
+        headingHtml={`${commercialFilm.data.headingPrefix ?? ''}${commercialFilm.data.headingItalic ? ` <em>${commercialFilm.data.headingItalic}</em>` : ''}${commercialFilm.data.headingSuffix ? `&nbsp;${commercialFilm.data.headingSuffix}` : ''}`.trim()}
+        description={commercialFilm.data.description}
+        videoUrl={commercialFilm.data.videoUrl}
+        videoUrlHd={commercialFilm.data.videoUrlHd}
+        poster={commercialFilm.data.poster}
+        ariaLabel={`${commercialFilm.data.title} by Alex DeRoussel`}
+      />
+    )}
+
+    {aboutEntry && (
+      <About
+        lede={aboutLede}
+        disciplines={about.disciplines}
+        basedIn={about.basedIn}
+        available={about.available}
+      />
+    )}
+
+    <Contact
+      email={email}
+      phone={phone}
+      phoneDisplay={phoneDisplay}
+      instagramUrl={instagramUrl}
+    />
+  </main>
+
+  <SiteFooter
+    email={email}
+    phone={phone}
+    phoneDisplay={phoneDisplay}
+    instagramUrl={instagramUrl}
+  />
+
+  <Lightbox />
+</BaseLayout>
