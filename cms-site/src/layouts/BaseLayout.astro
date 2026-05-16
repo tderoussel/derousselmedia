@@ -61,10 +61,36 @@ const preloadSrcset = sources.srcWebp ?? '';
   imagesrcset={preloadSrcset}
   imagesizes="100vw"
 />
+
+<!--
+  Netlify Identity widget — required on every page so invite/recovery tokens
+  in URL hashes (e.g. derousselmedia.com/#invite_token=…) are caught and the
+  password-setup modal opens. After login, we redirect the user to /admin/.
+-->
+<script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
 </head>
 <body data-theme="dark">
   <a class="skip-link" href="#sports">Skip to portfolio</a>
   <slot />
   <script src="/main.js" defer is:inline></script>
+  <script is:inline>
+    // Wire the Netlify Identity widget: on a fresh login or invite acceptance,
+    // send the user straight to the admin. Guarded so it no-ops if the widget
+    // script failed to load (e.g. ad-blocker).
+    (function () {
+      function bind() {
+        if (!window.netlifyIdentity) return;
+        window.netlifyIdentity.on('init', function (user) {
+          if (!user) {
+            window.netlifyIdentity.on('login', function () {
+              document.location.href = '/admin/';
+            });
+          }
+        });
+      }
+      if (document.readyState === 'complete') bind();
+      else window.addEventListener('load', bind);
+    })();
+  </script>
 </body>
 </html>
