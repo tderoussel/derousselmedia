@@ -1,5 +1,5 @@
 ---
-image: /assets/sports/sports-05-md.jpg
+image: /uploads/img_0725-2-.jpg
 alt: George Mason 'Patriots Track & Field' runner smiling mid-stride in an open
   field.
 span: tall
