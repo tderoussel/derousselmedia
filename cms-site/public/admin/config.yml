@@ -26,6 +26,7 @@ public_folder: /uploads
 # Per-photo size limit. Decap rejects larger uploads in the browser.
 # Alex's typical phone/camera output is well under this.
 media_library:
+  name: default
   config:
     max_file_size: 20971520 # 20 MB
 
@@ -181,6 +182,7 @@ collections:
         label: 'Video URL or upload'
         widget: file
         media_library:
+          name: default
           config:
             max_file_size: 52428800 # 50 MB
         required: true
