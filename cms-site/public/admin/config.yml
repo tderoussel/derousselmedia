@@ -23,12 +23,10 @@ local_backend: true
 media_folder: cms-site/public/uploads
 public_folder: /uploads
 
-# Per-photo size limit. Decap rejects larger uploads in the browser.
-# Alex's typical phone/camera output is well under this.
-media_library:
-  name: default
-  config:
-    max_file_size: 20971520 # 20 MB
+# Note: Decap CMS 3.x's `media_library` config block requires a registered
+# external library name (uploadcare/cloudinary). Omitting it uses the built-in
+# file picker with no in-browser size cap — Git Gateway rejects commits over
+# ~100 MB anyway, so very large uploads will fail at save time rather than upload.
 
 site_url: https://derousselmedia.com
 display_url: https://derousselmedia.com
@@ -181,12 +179,8 @@ collections:
       - name: videoUrl
         label: 'Video URL or upload'
         widget: file
-        media_library:
-          name: default
-          config:
-            max_file_size: 52428800 # 50 MB
         required: true
-        hint: 'Upload a local MP4 (max 50 MB) OR paste a YouTube/Vimeo URL.'
+        hint: 'Upload a local MP4 (keep under 50 MB to be safe) OR paste a YouTube/Vimeo URL.'
       - { name: videoUrlHd, label: 'Optional HD rendition (1080p)', widget: file, required: false, hint: 'For local videos: a higher-quality fallback for desktop.' }
       - { name: poster, label: 'Poster image (required for local video)', widget: image, required: false }
       - { name: order, label: 'Order', widget: number, default: 100, value_type: int }
