@@ -1,7 +1,7 @@
 ---
-image: "/assets/sports/sports-01-md.jpg"
-alt: "Portrait of a George Mason track-and-field athlete in a white team T-shirt, mid-day light."
-span: "auto"
+image: /assets/sports/sports-01-md.jpg
+alt: "Athlete takes a moment to mentally prepare before his race. "
+span: auto
 order: 150
 hasResponsiveVariants: true
 width: 4000
