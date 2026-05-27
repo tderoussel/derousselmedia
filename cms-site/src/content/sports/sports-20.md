@@ -1,7 +1,8 @@
 ---
-image: "/assets/sports/sports-20-md.jpg"
-alt: "George Mason pole vaulter clapping chalk dust between his hands before a jump, indoor track facility in the background."
-span: "wide"
+image: /assets/sports/sports-20-md.jpg
+alt: "George Mason pole vaulter starting a clap before his attempt at a record
+  height. "
+span: wide
 order: 160
 hasResponsiveVariants: true
 width: 5181
