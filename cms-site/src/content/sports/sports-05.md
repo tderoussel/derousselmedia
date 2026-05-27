@@ -1,6 +1,6 @@
 ---
 image: /uploads/img_0725-2-.jpg
-alt: Runner smiles during mid-stride in an open field.
+alt: Runner smiles, mid-stride, in an open field.
 span: tall
 order: 80
 hasResponsiveVariants: true
