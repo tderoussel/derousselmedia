@@ -5,5 +5,5 @@ aboutLede: Alex DeRoussel is a videographer, photographer, and broadcast
   eye for available light and the quiet moments around the action.
 disciplines: Photography · Videography · Journalism
 basedIn: Washington, D.C. / Cincinnati, OH
-available: "Commercial · NIL · Personal "
+available: Sports · Commercial · Personal Branding · Events
 ---
