@@ -1,7 +1,7 @@
 ---
-image: "/assets/sports/sports-06-md.jpg"
-alt: "George Mason 800-meter runner mid-race, leaning into a turn alongside a Georgetown athlete."
-span: "auto"
+image: /assets/sports/sports-06-md.jpg
+alt: George Mason athlete shocked as he crosses the line in a lifetime best.
+span: auto
 order: 90
 hasResponsiveVariants: true
 width: 3040
