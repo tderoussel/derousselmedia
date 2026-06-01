@@ -14,10 +14,13 @@ interface Props {
 const {
   title,
   description,
-  ogImage = '/assets/sports/sports-13-lg.jpg',
+  ogImage = '/brand/og-image.jpg',
   heroImage = '/assets/sports/sports-13-md.jpg',
   heroImageHasVariants = true,
 } = Astro.props;
+
+// Social platforms require an absolute URL for the share image.
+const ogImageUrl = new URL(ogImage, 'https://www.derousselmedia.com').href;
 
 const sources = pictureSources(heroImage, heroImageHasVariants);
 // Use the smallest WebP variant as the preload href so mobile doesn't pull md/lg.
@@ -39,13 +42,15 @@ const preloadSrcset = sources.srcWebp ?? '';
 <meta property="og:type" content="website" />
 <meta property="og:title" content="DeRoussel Media" />
 <meta property="og:description" content="Visual storytelling — sports, landscape, journalism, and commercial work by Alex DeRoussel." />
-<meta property="og:image" content={ogImage} />
+<meta property="og:image" content={ogImageUrl} />
 <meta name="twitter:card" content="summary_large_image" />
 <meta name="twitter:title" content="DeRoussel Media" />
 <meta name="twitter:description" content="Visual storytelling by Alex DeRoussel — sports, landscape, journalism, commercial." />
-<meta name="twitter:image" content={ogImage} />
+<meta name="twitter:image" content={ogImageUrl} />
 
-<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+<link rel="icon" type="image/png" sizes="32x32" href="/favicon-32x32.png" />
+<link rel="icon" type="image/png" sizes="16x16" href="/favicon-16x16.png" />
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 <link rel="preconnect" href="https://fonts.googleapis.com" />
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
 <link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght,SOFT,WONK@0,9..144,300..900,30..100,0..1;1,9..144,300..900,30..100,0..1&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&display=swap" />
@@ -62,35 +67,10 @@ const preloadSrcset = sources.srcWebp ?? '';
   imagesizes="100vw"
 />
 
-<!--
-  Netlify Identity widget — required on every page so invite/recovery tokens
-  in URL hashes (e.g. derousselmedia.com/#invite_token=…) are caught and the
-  password-setup modal opens. After login, we redirect the user to /admin/.
--->
-<script src="https://identity.netlify.com/v1/netlify-identity-widget.js" defer></script>
 </head>
 <body data-theme="dark">
   <a class="skip-link" href="#sports">Skip to portfolio</a>
   <slot />
   <script src="/main.js" defer is:inline></script>
-  <script is:inline>
-    // Wire the Netlify Identity widget: on a fresh login or invite acceptance,
-    // send the user straight to the admin. Guarded so it no-ops if the widget
-    // script failed to load (e.g. ad-blocker).
-    (function () {
-      function bind() {
-        if (!window.netlifyIdentity) return;
-        window.netlifyIdentity.on('init', function (user) {
-          if (!user) {
-            window.netlifyIdentity.on('login', function () {
-              document.location.href = '/admin/';
-            });
-          }
-        });
-      }
-      if (document.readyState === 'complete') bind();
-      else window.addEventListener('load', bind);
-    })();
-  </script>
 </body>
 </html>

@@ -17,5 +17,5 @@ contactEmail: derousselmedia@gmail.com
 contactPhone: "+15139688918"
 contactPhoneDisplay: (513) 968–8918
 instagramUrl: https://www.instagram.com/deroussel.digital/
-ogImage: /assets/sports/sports-13-lg.jpg
+ogImage: /brand/og-image.jpg
 ---

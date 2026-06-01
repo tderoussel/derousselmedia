@@ -145,6 +145,12 @@ a { color: inherit; text-decoration: none; }
   font-style: italic;
   font-variation-settings: "opsz" 144, "SOFT" 100, "WONK" 1;
 }
+.brand { display: inline-flex; align-items: center; }
+.brand-logo {
+  display: block;
+  height: clamp(26px, 1.4vw + 17px, 32px);
+  width: auto;
+}
 
 .nav-list {
   list-style: none; margin: 0; padding: 0;
