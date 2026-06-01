@@ -12,8 +12,7 @@ backend:
   name: github
   repo: tderoussel/derousselmedia
   branch: main
-  # ▼▼▼ REPLACE this with your deployed sveltia-cms-auth Worker URL (no trailing slash).
-  base_url: https://REPLACE-WITH-YOUR-AUTH-WORKER.workers.dev
+  base_url: https://sveltia-cms-auth.derousselmedia.workers.dev
   commit_messages:
     create: 'cms: create {{collection}} "{{slug}}"'
     update: 'cms: update {{collection}} "{{slug}}"'
