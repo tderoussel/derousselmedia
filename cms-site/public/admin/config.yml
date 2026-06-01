@@ -122,11 +122,44 @@ collections:
       - { name: width, label: 'Original width (optional)', widget: number, required: false, value_type: int }
       - { name: height, label: 'Original height (optional)', widget: number, required: false, value_type: int }
 
-  # 3. MISCELLANEOUS GALLERY
+  # 3. PERSONAL GALLERY (folder name stays "misc" so existing photos keep working)
   - name: misc
-    label: Miscellaneous photos
-    label_singular: Miscellaneous photo
+    label: Personal photos
+    label_singular: Personal photo
     folder: cms-site/src/content/misc
+    create: true
+    delete: true
+    extension: md
+    format: yaml-frontmatter
+    slug: '{{slug}}'
+    summary: '{{order | default(100)}} · {{alt | truncate(60)}}'
+    sortable_fields: [order, alt]
+    fields:
+      - { name: image, label: 'Photo', widget: image, required: true }
+      - { name: alt, label: 'Description (alt text)', widget: string, required: true }
+      - { name: caption, label: 'Caption (optional)', widget: string, required: false }
+      - name: span
+        label: 'Emphasis'
+        widget: select
+        default: auto
+        options:
+          - { label: 'Auto', value: auto }
+          - { label: 'Full-bleed letterbox', value: wide }
+          - { label: 'Tall column', value: tall }
+          - { label: 'Small', value: small }
+          - { label: 'Medium', value: medium }
+          - { label: 'Large', value: large }
+        required: false
+      - { name: order, label: 'Order', widget: number, default: 100, value_type: int, hint: 'Lower numbers appear first.' }
+      - { name: hasResponsiveVariants, label: 'Has pre-built variants', widget: hidden, default: false }
+      - { name: width, label: 'Original width (optional)', widget: number, required: false, value_type: int }
+      - { name: height, label: 'Original height (optional)', widget: number, required: false, value_type: int }
+
+  # 3b. EVENTS GALLERY
+  - name: events
+    label: Events photos
+    label_singular: Events photo
+    folder: cms-site/src/content/events
     create: true
     delete: true
     extension: md

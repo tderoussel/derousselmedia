@@ -43,8 +43,14 @@ const landscape = defineCollection({
   schema: photoSchema,
 });
 
+// Folder stays "misc" for backward compatibility; it's surfaced as "Personal" in the UI.
 const misc = defineCollection({
   loader: glob({ pattern: '**/*.md', base: './src/content/misc' }),
+  schema: photoSchema,
+});
+
+const events = defineCollection({
+  loader: glob({ pattern: '**/*.md', base: './src/content/events' }),
   schema: photoSchema,
 });
 
@@ -95,4 +101,4 @@ const pages = defineCollection({
   }),
 });
 
-export const collections = { sports, landscape, misc, films, pages };
+export const collections = { sports, landscape, misc, events, films, pages };

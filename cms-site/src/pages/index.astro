@@ -19,6 +19,7 @@ import Lightbox from '../components/Lightbox.astro';
 const sportsRaw = await getCollection('sports');
 const landscapeRaw = await getCollection('landscape');
 const miscRaw = await getCollection('misc');
+const eventsRaw = await getCollection('events');
 const filmsRaw = await getCollection('films');
 
 // Sort by `order` then by `id` for stable secondary order.
@@ -28,6 +29,7 @@ const byOrder = <T extends { id: string; data: { order: number } }>(arr: T[]) =>
 const sports = byOrder(sportsRaw);
 const landscape = byOrder(landscapeRaw);
 const misc = byOrder(miscRaw);
+const events = byOrder(eventsRaw);
 const films = byOrder(filmsRaw);
 
 // Map entries → gallery photo props.
@@ -44,6 +46,7 @@ const toGalleryPhoto = (e: typeof sports[number]) => ({
 const sportsPhotos = sports.map(toGalleryPhoto);
 const landscapePhotos = landscape.map(toGalleryPhoto);
 const miscPhotos = misc.map(toGalleryPhoto);
+const eventsPhotos = events.map(toGalleryPhoto);
 
 // Pages
 const settingsEntry = await getEntry('pages', 'settings');
@@ -93,7 +96,7 @@ const aboutLede = about.aboutLede ?? 'Alex DeRoussel is a videographer, photogra
   heroImage={heroRotation[0]?.image}
   heroImageHasVariants={heroRotation[0]?.hasResponsiveVariants}
 >
-  <SiteHeader />
+  <SiteHeader hasEvents={events.length > 0} />
 
   <main>
     <Hero
@@ -111,6 +114,7 @@ const aboutLede = about.aboutLede ?? 'Alex DeRoussel is a videographer, photogra
       sportsCount={sports.length}
       landscapeCount={landscape.length}
       miscCount={misc.length}
+      eventsCount={events.length}
       hasJournalism={!!journalismFilm}
       hasCommercial={!!commercialFilm}
     />
@@ -154,20 +158,40 @@ const aboutLede = about.aboutLede ?? 'Alex DeRoussel is a videographer, photogra
       </section>
     )}
 
-    {misc.length > 0 && <TypeBreaker label="Miscellaneous" />}
+    {misc.length > 0 && <TypeBreaker label="Personal" />}
 
     {misc.length > 0 && (
       <section class="gallery gallery-misc" id="misc" aria-labelledby="misc-heading">
         <SectionHeader
-          eyebrow="004 / Miscellaneous"
-          headingHtml="<em>Miscellaneous</em>"
-          lede="Frames that don&rsquo;t sit in a category — night light, golden hour, the quiet edges of an event."
+          eyebrow="004 / Personal"
+          headingHtml="<em>Personal</em>"
+          lede="Personal work, off the clock — night light, golden hour, the quiet edges of a day."
           id="misc-heading"
         />
         <Gallery
           photos={miscPhotos}
           groupId="misc"
           ariaLabelledby="misc-heading"
+          eagerCount={0}
+          gridVariant="landscape"
+        />
+      </section>
+    )}
+
+    {events.length > 0 && <TypeBreaker label="Events" />}
+
+    {events.length > 0 && (
+      <section class="gallery gallery-events" id="events" aria-labelledby="events-heading">
+        <SectionHeader
+          eyebrow="005 / Events"
+          headingHtml="<em>Events</em>"
+          lede="On the ground at games, ceremonies, and gatherings — the energy and the in-between moments."
+          id="events-heading"
+        />
+        <Gallery
+          photos={eventsPhotos}
+          groupId="events"
+          ariaLabelledby="events-heading"
           eagerCount={0}
           gridVariant="landscape"
         />

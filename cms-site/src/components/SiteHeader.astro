@@ -1,6 +1,10 @@
 ---
 // Sticky top nav with mobile hamburger.
 // Interactivity provided by /main.js (the legacy script).
+interface Props {
+  hasEvents?: boolean;
+}
+const { hasEvents = false } = Astro.props;
 ---
 <header class="site-header" id="top">
   <nav class="nav" aria-label="Primary">
@@ -17,6 +21,7 @@
     <ul class="nav-list" id="nav-list">
       <li><a href="#sports">sports</a></li>
       <li><a href="#landscape">landscape</a></li>
+      {hasEvents && <li><a href="#events">events</a></li>}
       <li><a href="#journalism">journalism</a></li>
       <li><a href="#commercial">commercial</a></li>
       <li><a href="#about">about</a></li>
