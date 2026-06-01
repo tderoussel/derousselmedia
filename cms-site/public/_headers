@@ -1,0 +1,23 @@
+# Cloudflare Pages response headers — translated from netlify.toml.
+# Lives in public/ so Astro copies it to dist/_headers at build time.
+# Docs: https://developers.cloudflare.com/pages/configuration/headers/
+
+# Hashed Astro build assets — immutable, cache for a year.
+/_astro/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# Pre-built migrated images — immutable, cache for a year.
+/assets/*
+  Cache-Control: public, max-age=31536000, immutable
+
+# CMS uploads can be replaced under the same filename — keep a short TTL.
+/uploads/*
+  Cache-Control: public, max-age=300, must-revalidate
+
+# Always revalidate the CMS admin app so config changes apply immediately.
+/admin/*
+  Cache-Control: no-cache, must-revalidate
+
+# Serve the CMS config with the correct content type.
+/admin/config.yml
+  Content-Type: text/yaml; charset=utf-8

@@ -1,12 +1,19 @@
-# Decap CMS configuration for DeRoussel Media.
-# Docs: https://decapcms.org/docs/configuration-options/
+# Sveltia CMS configuration for DeRoussel Media.
+# Sveltia is a drop-in, Netlify-free replacement for Decap CMS and reads this
+# very same file. Docs: https://github.com/sveltia/sveltia-cms
 #
-# Backend: git-gateway (Netlify Identity is required — enable in Netlify dashboard).
+# Backend: GitHub OAuth, brokered by a small Cloudflare Worker (sveltia-cms-auth).
+#   - Editors sign in with a GitHub account that has WRITE access to the repo.
+#   - `base_url` below must point at your deployed auth Worker.
+#   - See CLOUDFLARE_MIGRATION.md for the one-time setup.
 # Branch: main. Edits commit directly to main (no editorial workflow).
 
 backend:
-  name: git-gateway
+  name: github
+  repo: tderoussel/derousselmedia
   branch: main
+  # ▼▼▼ REPLACE this with your deployed sveltia-cms-auth Worker URL (no trailing slash).
+  base_url: https://REPLACE-WITH-YOUR-AUTH-WORKER.workers.dev
   commit_messages:
     create: 'cms: create {{collection}} "{{slug}}"'
     update: 'cms: update {{collection}} "{{slug}}"'
@@ -180,8 +187,8 @@ collections:
         label: 'Video URL or upload'
         widget: file
         required: true
-        hint: 'Upload a local MP4 (keep under 50 MB to be safe) OR paste a YouTube/Vimeo URL.'
-      - { name: videoUrlHd, label: 'Optional HD rendition (1080p)', widget: file, required: false, hint: 'For local videos: a higher-quality fallback for desktop.' }
+        hint: 'Paste a YouTube/Vimeo URL (recommended) OR upload a local MP4 under 25 MB (the Cloudflare per-file limit).'
+      - { name: videoUrlHd, label: 'Optional HD rendition (1080p)', widget: file, required: false, hint: 'Optional. A 1080p file for desktop — keep it under 25 MB (Cloudflare limit); for larger HD, use a YouTube/Vimeo URL above instead.' }
       - { name: poster, label: 'Poster image (required for local video)', widget: image, required: false }
       - { name: order, label: 'Order', widget: number, default: 100, value_type: int }
 
