@@ -28,9 +28,14 @@ const photoSchema = z.object({
   // 3 sizes × 2 formats sitting next to it under /assets/. False (default) means it
   // was uploaded through the CMS and only the original exists.
   hasResponsiveVariants: z.boolean().default(false),
-  // Optional manual width/height in case Decap doesn't capture them.
-  width: z.number().int().optional(),
-  height: z.number().int().optional(),
+  // Optional manual width/height. The CMS writes these as an explicit `null`
+  // (not an omitted key) when it can't read the image's dimensions on upload.
+  // `.optional()` accepts a missing key but REJECTS an explicit null, which
+  // aborts the whole `astro build` and blocks every deploy. `.nullish()`
+  // (= number | null | undefined) accepts both. The Gallery component already
+  // treats a missing dimension as "unknown", so null renders identically.
+  width: z.number().int().nullish(),
+  height: z.number().int().nullish(),
 });
 
 const sports = defineCollection({
@@ -66,8 +71,10 @@ const films = defineCollection({
     // Either a local file path under /uploads/ or /assets/, OR a YouTube/Vimeo URL.
     videoUrl: z.string().describe('Local path (e.g. /uploads/film.mp4) OR remote URL (YouTube/Vimeo)'),
     // For local files only: optional second rendition (1080p) and explicit MIME.
-    videoUrlHd: z.string().optional().describe('Optional high-quality rendition for local files'),
-    poster: z.string().optional().describe('Poster image path (required for local files, optional for YouTube/Vimeo)'),
+    // `.nullish()` (not `.optional()`) because the CMS writes an empty file/image
+    // field as an explicit `null`, which `.optional()` would reject at build time.
+    videoUrlHd: z.string().nullish().describe('Optional high-quality rendition for local files'),
+    poster: z.string().nullish().describe('Poster image path (required for local files, optional for YouTube/Vimeo)'),
     section: z.string().describe('HTML id for the section anchor, e.g. "journalism" or "commercial"'),
     order: z.number().int().default(100),
   }),
