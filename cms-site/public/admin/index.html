@@ -11,6 +11,12 @@
     <!-- Sveltia CMS — a drop-in, Netlify-free replacement for Decap CMS. -->
     <!-- It reads the same /admin/config.yml and authenticates via GitHub -->
     <!-- (see the `backend` block in config.yml). No Netlify Identity needed. -->
-    <script src="https://unpkg.com/@sveltia/cms/dist/sveltia-cms.js" type="module"></script>
+    <!-- Version PINNED on purpose. Unpinned, @sveltia/cms auto-updated and -->
+    <!-- changed how it serializes empty fields (writing null), which silently -->
+    <!-- broke the build & froze the live site. To update intentionally: bump -->
+    <!-- the version below to the latest from -->
+    <!-- https://github.com/sveltia/sveltia-cms/releases, then confirm -->
+    <!-- `npm run build` still passes before deploying. -->
+    <script src="https://unpkg.com/@sveltia/cms@0.165.2/dist/sveltia-cms.js" type="module"></script>
   </body>
 </html>

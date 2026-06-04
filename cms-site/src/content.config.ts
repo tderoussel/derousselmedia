@@ -21,7 +21,7 @@ const SpanHint = z.enum(['auto', 'small', 'medium', 'large', 'wide', 'tall']).de
 const photoSchema = z.object({
   image: z.string().describe('Path to the image (e.g. /uploads/photo.jpg)'),
   alt: z.string().min(1).describe('Required for accessibility'),
-  caption: z.string().optional(),
+  caption: z.string().nullish(), // null-tolerant: the CMS may write an empty field as null (see width/height note below)
   span: SpanHint,
   order: z.number().int().default(100),
   // Internal — true when this photo was migrated from the pre-built pipeline and has
@@ -64,9 +64,9 @@ const films = defineCollection({
   schema: z.object({
     title: z.string(),
     eyebrow: z.string().describe('Small label above the heading, e.g. "005 / Broadcast Journalism"'),
-    headingPrefix: z.string().optional().describe('Text shown before the italic word in the heading'),
-    headingItalic: z.string().optional().describe('The italicized word in the heading'),
-    headingSuffix: z.string().optional().describe('Text shown after the italic word'),
+    headingPrefix: z.string().nullish().describe('Text shown before the italic word in the heading'),
+    headingItalic: z.string().nullish().describe('The italicized word in the heading'),
+    headingSuffix: z.string().nullish().describe('Text shown after the italic word'),
     description: z.string().describe('Short paragraph shown under the heading'),
     // Either a local file path under /uploads/ or /assets/, OR a YouTube/Vimeo URL.
     videoUrl: z.string().describe('Local path (e.g. /uploads/film.mp4) OR remote URL (YouTube/Vimeo)'),
@@ -85,26 +85,30 @@ const pages = defineCollection({
   // pages share no fixed schema — about.md has bio fields, settings.md has site-level config.
   // We use a permissive schema and access the rendered body for bio HTML.
   schema: z.object({
+    // Every field is `.nullish()` (not `.optional()`): the CMS writes a blank
+    // field as an explicit `null`, and `.optional()` rejects null and fails the
+    // build (see the width/height note above). All consumers read these via `??`
+    // or truthy guards, so null and undefined behave identically downstream.
     // about.md
-    aboutLede: z.string().optional(),
-    disciplines: z.string().optional(),
-    basedIn: z.string().optional(),
-    available: z.string().optional(),
+    aboutLede: z.string().nullish(),
+    disciplines: z.string().nullish(),
+    basedIn: z.string().nullish(),
+    available: z.string().nullish(),
 
     // settings.md
-    siteTitle: z.string().optional(),
-    siteDescription: z.string().optional(),
-    contactEmail: z.string().optional(),
-    contactPhone: z.string().optional(),
-    contactPhoneDisplay: z.string().optional(),
-    instagramUrl: z.string().optional(),
-    tagline: z.string().optional(),
-    heroEyebrowLeft: z.string().optional(),
-    heroEyebrowRight: z.string().optional(),
-    heroNameLine1: z.string().optional(),
-    heroNameLine2: z.string().optional(),
-    heroRotation: z.array(z.string()).optional(),
-    ogImage: z.string().optional(),
+    siteTitle: z.string().nullish(),
+    siteDescription: z.string().nullish(),
+    contactEmail: z.string().nullish(),
+    contactPhone: z.string().nullish(),
+    contactPhoneDisplay: z.string().nullish(),
+    instagramUrl: z.string().nullish(),
+    tagline: z.string().nullish(),
+    heroEyebrowLeft: z.string().nullish(),
+    heroEyebrowRight: z.string().nullish(),
+    heroNameLine1: z.string().nullish(),
+    heroNameLine2: z.string().nullish(),
+    heroRotation: z.array(z.string()).nullish(),
+    ogImage: z.string().nullish(),
   }),
 });
 
