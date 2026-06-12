@@ -102,6 +102,7 @@ const pages = defineCollection({
     contactPhone: z.string().nullish(),
     contactPhoneDisplay: z.string().nullish(),
     instagramUrl: z.string().nullish(),
+    youtubeUrl: z.string().nullish(),
     tagline: z.string().nullish(),
     heroEyebrowLeft: z.string().nullish(),
     heroEyebrowRight: z.string().nullish(),

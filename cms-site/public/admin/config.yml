@@ -261,4 +261,5 @@ collections:
           - { name: contactPhone, label: 'Contact phone (e.g. +15139688918)', widget: string, required: false, default: '+15139688918' }
           - { name: contactPhoneDisplay, label: 'Contact phone (display)', widget: string, required: false, default: '(513) 968–8918' }
           - { name: instagramUrl, label: 'Instagram URL (leave blank to hide)', widget: string, required: false, default: '' }
+          - { name: youtubeUrl, label: 'YouTube URL (leave blank to hide)', widget: string, required: false, default: '' }
           - { name: ogImage, label: 'Open Graph share image', widget: string, required: false, default: '/assets/sports/sports-13-lg.jpg' }

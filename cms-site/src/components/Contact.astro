@@ -4,10 +4,13 @@ interface Props {
   phone: string;
   phoneDisplay: string;
   instagramUrl?: string;
+  youtubeUrl?: string;
 }
 
-const { email, phone, phoneDisplay, instagramUrl } = Astro.props;
+const { email, phone, phoneDisplay, instagramUrl, youtubeUrl } = Astro.props;
 const phoneHref = `tel:${phone.replace(/[^+\d]/g, '')}`;
+const hasInstagram = instagramUrl && instagramUrl.trim() !== '' && instagramUrl !== '#';
+const hasYoutube = youtubeUrl && youtubeUrl.trim() !== '' && youtubeUrl !== '#';
 ---
 <section class="contact" id="contact" aria-labelledby="contact-heading">
   <p class="section-eyebrow">008 / Contact</p>
@@ -25,11 +28,17 @@ const phoneHref = `tel:${phone.replace(/[^+\d]/g, '')}`;
     </li>
     <li>
       <span class="contact-label">Social</span>
-      {instagramUrl && instagramUrl.trim() !== '' && instagramUrl !== '#' ? (
+      {hasInstagram ? (
         <a class="contact-link" href={instagramUrl} target="_blank" rel="noopener">Instagram &nbsp;&rarr;</a>
       ) : (
         <a class="contact-link contact-link-muted" href="#" aria-disabled="true" tabindex="-1">Instagram &nbsp;&rarr;</a>
       )}
     </li>
+    {hasYoutube && (
+      <li>
+        <span class="contact-label">&nbsp;</span>
+        <a class="contact-link" href={youtubeUrl} target="_blank" rel="noopener">YouTube &nbsp;&rarr;</a>
+      </li>
+    )}
   </ul>
 </section>
