@@ -1,6 +1,7 @@
 ---
-image: /uploads/img_0725-2-.jpg
-alt: Runner smiles, mid-stride, in an open field.
+image: /uploads/D59A1905 (1).jpg
+alt: Young runner grins as she begins her race.
+caption: ''
 span: tall
 order: 80
 hasResponsiveVariants: true
