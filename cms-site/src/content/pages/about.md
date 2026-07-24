@@ -1,9 +1,6 @@
 ---
-aboutLede: Alex DeRoussel is a videographer, photographer, and broadcast
-  journalist working in sports, city, and commercial film. He shoots college
-  athletics, on-the-ground reporting, and concept-led commercial spots, with an
-  eye for available light and the quiet moments around the action.
+aboutLede: Alex DeRoussel is a videographer, photographer, and broadcast journalist creating visual stories across sports, live events, and commercial media. He has created content for organizations including George Mason Athletics, SPIRE Institute, and the legendary rock band Night Ranger. From college athletics and live performances to concept-driven commercial work, he focuses on authentic storytelling, available light, and the quiet moments that surround the action.
 disciplines: Photography · Videography · Journalism
-basedIn: Washington, D.C. / Cincinnati, OH
+basedIn: Cleveland, OH / Washington, D.C. / Cincinnati, OH
 available: Sports · Commercial · Personal Branding · Events
 ---
