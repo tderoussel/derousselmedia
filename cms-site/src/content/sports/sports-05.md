@@ -1,6 +1,6 @@
 ---
-image: /uploads/D59A1905 (1).jpg
-alt: Young runner grins as she begins her race.
+image: /uploads/IMG_2572.jpg
+alt: An athlete clears the water barrier during competition at the USATF Championships.
 caption: ''
 span: tall
 order: 80
