@@ -1,6 +1,7 @@
 ---
-image: /assets/sports/sports-02-md.jpg
-alt: "A solitary cross-country runner passes the home banner during workout. "
+image: /uploads/D59A8564.jpg
+alt: Coach overlooks team huddle prior to kickoff.
+caption: ''
 span: wide
 order: 60
 hasResponsiveVariants: true
